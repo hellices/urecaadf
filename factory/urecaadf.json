@@ -1,0 +1,9 @@
+{
+	"name": "urecaadf",
+	"location": "koreacentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2c903ae1-b781-49e6-b0c2-b5fc5df8180d",
+		"tenantId": "b3deb9f8-15b6-4082-921c-e9985976d8da"
+	}
+}
