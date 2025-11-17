@@ -1,0 +1,23 @@
+{
+  "name": "AzureSqlDatabase",
+  "type": "Microsoft.DataFactory/factories/linkedservices",
+  "properties": {
+    "description": "Linked service for Azure SQL Database connection",
+    "annotations": [],
+    "type": "AzureSqlDatabase",
+    "typeProperties": {
+      "connectionString": {
+        "type": "SecureString",
+        "value": "Server=tcp:<server-name>.database.windows.net,1433;Database=<database-name>;User ID=<username>;Password=<password>;Encrypt=True;Connection Timeout=30;"
+      }
+    },
+    "parameters": {
+      "serverName": {
+        "type": "string"
+      },
+      "databaseName": {
+        "type": "string"
+      }
+    }
+  }
+}

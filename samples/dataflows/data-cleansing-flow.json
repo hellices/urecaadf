@@ -1,0 +1,106 @@
+{
+  "name": "DataCleansingFlow",
+  "properties": {
+    "description": "Data flow for cleansing and validating input data",
+    "type": "MappingDataFlow",
+    "typeProperties": {
+      "sources": [
+        {
+          "dataset": {
+            "referenceName": "SourceDataset",
+            "type": "DatasetReference"
+          },
+          "name": "RawData",
+          "description": "Source data input"
+        }
+      ],
+      "sinks": [
+        {
+          "dataset": {
+            "referenceName": "CleanDataset",
+            "type": "DatasetReference"
+          },
+          "name": "CleanedData",
+          "description": "Cleaned and validated output"
+        }
+      ],
+      "transformations": [
+        {
+          "name": "RemoveNulls",
+          "description": "Filter out rows with null values in critical columns",
+          "type": "Filter",
+          "typeProperties": {
+            "condition": {
+              "value": "!isNull(CustomerID) && !isNull(OrderDate)",
+              "type": "Expression"
+            }
+          }
+        },
+        {
+          "name": "TrimStrings",
+          "description": "Trim whitespace from string columns",
+          "type": "DerivedColumn",
+          "typeProperties": {
+            "columns": [
+              {
+                "name": "CustomerName",
+                "value": {
+                  "value": "trim(CustomerName)",
+                  "type": "Expression"
+                }
+              },
+              {
+                "name": "Email",
+                "value": {
+                  "value": "lower(trim(Email))",
+                  "type": "Expression"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "ValidateEmail",
+          "description": "Add validation flag for email format",
+          "type": "DerivedColumn",
+          "typeProperties": {
+            "columns": [
+              {
+                "name": "IsValidEmail",
+                "value": {
+                  "value": "regexMatch(Email, '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$')",
+                  "type": "Expression"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "SplitByValidity",
+          "description": "Split valid and invalid records",
+          "type": "ConditionalSplit",
+          "typeProperties": {
+            "conditions": [
+              {
+                "name": "ValidRecords",
+                "condition": {
+                  "value": "IsValidEmail == true()",
+                  "type": "Expression"
+                }
+              },
+              {
+                "name": "InvalidRecords",
+                "condition": {
+                  "value": "IsValidEmail == false()",
+                  "type": "Expression"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "script": "source(output(\n\t\tCustomerID as string,\n\t\tCustomerName as string,\n\t\tEmail as string,\n\t\tOrderDate as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> RawData\nRawData filter(!isNull(CustomerID) && !isNull(OrderDate)) ~> RemoveNulls\nRemoveNulls derive(CustomerName = trim(CustomerName),\n\t\tEmail = lower(trim(Email))) ~> TrimStrings\nTrimStrings derive(IsValidEmail = regexMatch(Email, '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$')) ~> ValidateEmail\nValidateEmail split(IsValidEmail == true(),\n\tdisjoint: false) ~> SplitByValidity@(ValidRecords, InvalidRecords)\nSplitByValidity@ValidRecords sink(allowSchemaDrift: true,\n\tvalidateSchema: false) ~> CleanedData"
+    }
+  },
+  "type": "Microsoft.DataFactory/factories/dataflows"
+}

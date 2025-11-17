@@ -1,0 +1,96 @@
+{
+  "name": "CopyBlobToBlob",
+  "properties": {
+    "description": "Pipeline to copy data from one blob storage container to another",
+    "activities": [
+      {
+        "name": "CopyBlobData",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "7.00:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "userProperties": [],
+        "typeProperties": {
+          "source": {
+            "type": "BinarySource",
+            "storeSettings": {
+              "type": "AzureBlobStorageReadSettings",
+              "recursive": true,
+              "wildcardFolderPath": {
+                "value": "@pipeline().parameters.sourceFolderPath",
+                "type": "Expression"
+              },
+              "wildcardFileName": "*",
+              "deleteFilesAfterCompletion": false
+            },
+            "formatSettings": {
+              "type": "BinaryReadSettings"
+            }
+          },
+          "sink": {
+            "type": "BinarySink",
+            "storeSettings": {
+              "type": "AzureBlobStorageWriteSettings",
+              "copyBehavior": "PreserveHierarchy"
+            }
+          },
+          "enableStaging": false
+        },
+        "inputs": [
+          {
+            "referenceName": "SourceBlobDataset",
+            "type": "DatasetReference",
+            "parameters": {
+              "containerName": {
+                "value": "@pipeline().parameters.sourceContainer",
+                "type": "Expression"
+              }
+            }
+          }
+        ],
+        "outputs": [
+          {
+            "referenceName": "DestinationBlobDataset",
+            "type": "DatasetReference",
+            "parameters": {
+              "containerName": {
+                "value": "@pipeline().parameters.destinationContainer",
+                "type": "Expression"
+              },
+              "folderPath": {
+                "value": "@pipeline().parameters.destinationFolderPath",
+                "type": "Expression"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "sourceContainer": {
+        "type": "string",
+        "defaultValue": "input"
+      },
+      "sourceFolderPath": {
+        "type": "string",
+        "defaultValue": "data"
+      },
+      "destinationContainer": {
+        "type": "string",
+        "defaultValue": "output"
+      },
+      "destinationFolderPath": {
+        "type": "string",
+        "defaultValue": "processed"
+      }
+    },
+    "annotations": [],
+    "lastPublishTime": "2025-11-17T00:00:00Z"
+  },
+  "type": "Microsoft.DataFactory/factories/pipelines"
+}
