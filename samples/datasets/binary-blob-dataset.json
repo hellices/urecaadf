@@ -1,0 +1,36 @@
+{
+  "name": "BinaryBlobDataset",
+  "properties": {
+    "description": "Binary dataset for Azure Blob Storage files",
+    "linkedServiceName": {
+      "referenceName": "AzureBlobStorage",
+      "type": "LinkedServiceReference"
+    },
+    "parameters": {
+      "containerName": {
+        "type": "string",
+        "defaultValue": "data"
+      },
+      "folderPath": {
+        "type": "string",
+        "defaultValue": ""
+      }
+    },
+    "annotations": [],
+    "type": "Binary",
+    "typeProperties": {
+      "location": {
+        "type": "AzureBlobStorageLocation",
+        "folderPath": {
+          "value": "@dataset().folderPath",
+          "type": "Expression"
+        },
+        "container": {
+          "value": "@dataset().containerName",
+          "type": "Expression"
+        }
+      }
+    }
+  },
+  "type": "Microsoft.DataFactory/factories/datasets"
+}

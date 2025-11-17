@@ -1,0 +1,20 @@
+{
+  "name": "AzureBlobStorage",
+  "type": "Microsoft.DataFactory/factories/linkedservices",
+  "properties": {
+    "description": "Linked service for Azure Blob Storage connection",
+    "annotations": [],
+    "type": "AzureBlobStorage",
+    "typeProperties": {
+      "connectionString": {
+        "type": "SecureString",
+        "value": "DefaultEndpointsProtocol=https;AccountName=<storage-account-name>;AccountKey=<account-key>;EndpointSuffix=core.windows.net"
+      }
+    },
+    "parameters": {
+      "storageAccountName": {
+        "type": "string"
+      }
+    }
+  }
+}
