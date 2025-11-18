@@ -1,12 +1,12 @@
 {
 	"name": "CosmosDbNoSql1",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"annotations": [],
 		"type": "CosmosDb",
 		"typeProperties": {
-			"connectionString": "AccountEndpoint=https://ureca.documents.azure.com:443/;Database=ureca_evo;",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEMwM0JBQTIyLTc0RDUtNDI3Mi05NTRBLUEzQ0JBRkE4MTVGMF9kNWVmNDM5NC0xM2ZkLTQ3M2YtOTE1OC04YTc1Zjc3NzBlYjgiDQp9"
+			"accountEndpoint": "https://ureca.documents.azure.com:443/",
+			"database": "ureca_evo"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
