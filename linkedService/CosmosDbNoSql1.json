@@ -5,7 +5,7 @@
 		"type": "CosmosDb",
 		"typeProperties": {
 			"accountEndpoint": "https://ureca.documents.azure.com:443/",
-			"database": "ureca_evo"
+			"database": "ureca"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/linkedservices"
